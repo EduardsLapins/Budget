@@ -15,10 +15,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, MainMenuFragment())
-                .commit()
-        }
+        // Display StartScreenFragment at the start
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, StartScreenFragment())
+            .commit()
     }
 }
