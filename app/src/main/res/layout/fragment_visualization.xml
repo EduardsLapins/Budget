@@ -4,7 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F0F0F0"
     tools:context=".VisualizationFragment">
+
+    <TextView
+        android:id="@+id/tv_free_daily_assets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/line_chart"
@@ -16,5 +27,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHeight_percent="0.3" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/donut_chart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line_chart"
+        app:layout_constraintHeight_percent="0.3" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
