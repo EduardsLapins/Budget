@@ -1,28 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.savingsgoal.SavingsGoalFragment">
+    android:padding="16dp"
+    tools:context=".SavingsGoalFragment">
 
-    <Spinner
-        android:id="@+id/spinner_savings_goal"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
 
-    <!-- Add other UI elements for each savings goal option here -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose your savings goal"
+            android:textSize="24sp" />
 
-    <Button
-        android:id="@+id/btn_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <RadioGroup
+            android:id="@+id/radioGroupSavings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <RadioButton
+                android:id="@+id/radioSafetyPillow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Safety pillow" />
+
+            <EditText
+                android:id="@+id/etSafetyPillowPercentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Percentage of monthly income"
+                android:inputType="numberDecimal"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/radioProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product" />
+
+            <EditText
+                android:id="@+id/etProductPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Product price"
+                android:inputType="numberDecimal"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/etMonthsToSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Months to save"
+                android:inputType="number"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/radioNoSavings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No savings" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnSavingsNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next" />
+
+    </LinearLayout>
+
+</ScrollView>

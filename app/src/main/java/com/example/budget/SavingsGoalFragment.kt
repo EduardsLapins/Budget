@@ -5,51 +5,90 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import androidx.fragment.app.activityViewModels
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SavingsGoalFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
+
 class SavingsGoalFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val viewModel: AppViewModel by activityViewModels()
+    private lateinit var radioGroupSavings: RadioGroup
+    private lateinit var radioSafetyPillow: RadioButton
+    private lateinit var etSafetyPillowPercentage: EditText
+    private lateinit var radioProduct: RadioButton
+    private lateinit var etProductPrice: EditText
+    private lateinit var etMonthsToSave: EditText
+    private lateinit var btnSavingsNext: Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_savings_goal, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SavingsGoalFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic fun newInstance(param1: String, param2: String) =
-                SavingsGoalFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        radioGroupSavings = view.findViewById(R.id.radioGroupSavings)
+        radioSafetyPillow = view.findViewById(R.id.radioSafetyPillow)
+        etSafetyPillowPercentage = view.findViewById(R.id.etSafetyPillowPercentage)
+        radioProduct = view.findViewById(R.id.radioProduct)
+        etProductPrice = view.findViewById(R.id.etProductPrice)
+        etMonthsToSave = view.findViewById(R.id.etMonthsToSave)
+        btnSavingsNext = view.findViewById(R.id.btnSavingsNext)
+        var savingsGoalTypeValue = ""
+        var savingsGoalValue = 0.0
+        var savingsGoalMonthsValue = 0
+        var savingsGoalPercentValue = 0.0
+
+        radioGroupSavings.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.radioSafetyPillow -> {
+                    savingsGoalTypeValue = "SafetyPillow"
+                    etSafetyPillowPercentage.visibility = View.VISIBLE
+                    etProductPrice.visibility = View.GONE
+                    etMonthsToSave.visibility = View.GONE
                 }
+                R.id.radioProduct -> {
+                    savingsGoalTypeValue = "Product"
+                    etSafetyPillowPercentage.visibility = View.GONE
+                    etProductPrice.visibility = View.VISIBLE
+                    etMonthsToSave.visibility = View.VISIBLE
+                }
+                R.id.radioNoSavings -> {
+                    savingsGoalTypeValue = "NoSavings"
+                    etSafetyPillowPercentage.visibility = View.GONE
+                    etProductPrice.visibility = View.GONE
+                    etMonthsToSave.visibility = View.GONE
+                }
+            }
+        }
+
+        view.findViewById<Button>(R.id.btnSavingsNext).setOnClickListener {
+            val csvImportFragment = ImportCSVFragment()
+
+//            if (etProductPrice.text.toString().isNotEmpty()){
+//                savingsGoalValue = etProductPrice.text.toString().toDouble() // get savings goal value from input
+//                savingsGoalMonthsValue = etMonthsToSave.text.toString().toInt() // get savings goal months from inp
+//            }
+//            if (etSafetyPillowPercentage.toString().isNotEmpty()){
+//                savingsGoalPercentValue = etSafetyPillowPercentage.toString().toDouble() / 100
+//            }
+
+            viewModel.savingsGoal.value = savingsGoalValue
+            viewModel.savingsGoalType.value = savingsGoalTypeValue
+            viewModel.savingsPercent.value = savingsGoalPercentValue
+            viewModel.savingsGoalMonths.value = savingsGoalMonthsValue
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, csvImportFragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 }

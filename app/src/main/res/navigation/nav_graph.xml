@@ -3,26 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/startScreenFragment">
+    app:startDestination="@+id/startScreenFragment">
 
-    <fragment
-        android:id="@+id/startScreenFragment"
-        android:name="com.example.budget.StartScreenFragment"
-        android:label="Start Screen"
-        tools:layout="@layout/fragment_start_screen">
-        <!-- Add actions to navigate to other fragments -->
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/startScreenFragment"-->
+<!--        android:name="com.example.budget.StartScreenFragment"-->
+<!--        android:label="StartScreenFragment">-->
+<!--        <action-->
+<!--            android:id="@+id/action_startScreenFragment_to_savingsGoalFragment"-->
+<!--            app:destination="@id/savingsGoalFragment" />-->
+<!--    </fragment>-->
 
-    <!-- Add other fragments here -->
-    <fragment
-        android:id="@+id/savingsGoalFragment"
-        android:name="com.example.budget.ui.savingsgoal.SavingsGoalFragment"
-        android:label="Savings Goal"
-        tools:layout="@layout/fragment_savings_goal">
-        <action
-            android:id="@+id/action_savingsGoalFragment_to_ImportCSVFragment"
-            app:destination="@+id/ImportCSVFragment" />
-    </fragment>
-
-
+    <!-- Add the other fragments and their navigation actions here -->
 </navigation>

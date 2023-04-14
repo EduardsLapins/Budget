@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.content.Context
 import android.widget.Button
 import android.widget.EditText
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
@@ -56,6 +57,7 @@ class StartScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val viewModel: AppViewModel by activityViewModels()
 
         etIncome = view.findViewById(R.id.et_income)
         etExpenses = view.findViewById(R.id.et_expenses)
@@ -68,19 +70,23 @@ class StartScreenFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 saveUserData(income, expenses)
             }
+        }
 
-            // Pass the user data as arguments to ImportCSVFragment
-            val importCSVFragment = ImportCSVFragment().apply {
-                arguments = Bundle().apply {
-                    putDouble("income", income)
-                    putDouble("expenses", expenses)
-                }
-            }
+        view.findViewById<Button>(R.id.btn_submit).setOnClickListener {
+            val income = etIncome.text.toString().toDouble()
+            val expenses = etExpenses.text.toString().toDouble()
 
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, importCSVFragment)
+            viewModel.income.value = income
+            viewModel.expenses.value = expenses
+
+            val savingsGoalFragment = SavingsGoalFragment()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, savingsGoalFragment)
+                .addToBackStack(null)
                 .commit()
         }
+
+
 
     }
 }

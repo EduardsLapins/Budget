@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -27,6 +28,7 @@ import com.github.mikephil.charting.utils.MPPointF
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.random.Random
 
 class VisualizationFragment : Fragment() {
 
@@ -44,12 +46,18 @@ class VisualizationFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val viewModel: AppViewModel by activityViewModels()
 
         lineChart = view.findViewById(R.id.line_chart)
 
         // Retrieve income and expenses from arguments
-        val income = arguments?.getDouble("income") ?: 0.0
-        val expenses = arguments?.getDouble("expenses") ?: 0.0
+        val income = viewModel.income.value ?: 0.0
+        val expenses = viewModel.expenses.value ?: 0.0
+        val savingsGoal = viewModel.savingsGoal.value ?: 0.0
+        val savingsGoalPercent = viewModel.savingsPercent.value ?: 0.0
+        val savingsGoalType = viewModel.savingsGoalType.value ?: ""
+        val savingsGoalMonths = viewModel.savingsGoalMonths.value ?: 0
+
 
         // Calculate daily income and daily expenses
         val daysInMonth = LocalDate.now().lengthOfMonth().toDouble()
@@ -65,51 +73,46 @@ class VisualizationFragment : Fragment() {
         // Set up graphics
         setupDonutChart(donutChart, dailyIncome, dailyExpenses)
         updateFreeDailyAssets(view, dailyIncome, dailyExpenses)
+        val freeAssetsEntries = ArrayList<Entry>()
 
         for (i in 1..daysInMonth.toInt()) {
-            incomeEntries.add(Entry(i.toFloat(), (dailyIncome).toFloat()))
-            expenseEntries.add(Entry(i.toFloat(), (dailyExpenses).toFloat()))
+            val freeAssets = dailyIncome - (dailyExpenses + Random.nextInt(0, 21))
+            freeAssetsEntries.add(Entry(i.toFloat(), freeAssets.toFloat()))
         }
 
-        val incomeLineDataSet = LineDataSet(incomeEntries, "Daily Income").apply {
-            color = Color.GREEN
+        val freeAssetsLineDataSet = LineDataSet(freeAssetsEntries, "Free Assets").apply {
+            color = Color.BLUE
             lineWidth = 3f // Make the line thicker
             setDrawCircles(false) // Remove data points
             setDrawValues(false) // Remove data values
         }
 
-        val expenseLineDataSet = LineDataSet(expenseEntries, "Daily Expenses").apply {
-            color = Color.RED
-            lineWidth = 3f // Make the line thicker
-            setDrawCircles(false) // Remove data points
-            setDrawValues(false) // Remove data values
-        }
-
-        val lineData = LineData(incomeLineDataSet, expenseLineDataSet)
+        val lineData = LineData(freeAssetsLineDataSet)
         lineChart.data = lineData
 
-        // Customize the chart appearance
+// Customize the chart appearance
         lineChart.description.isEnabled = false
         lineChart.legend.isEnabled = true
         lineChart.xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setDrawGridLines(false)
-        }
-        lineChart.xAxis.apply {
-            position = XAxis.XAxisPosition.BOTTOM
-            setDrawGridLines(false)
             granularity = 1f // Show labels for each day
-            setLabelCount(daysInMonth.toInt(), true) // Set the number of labels to match the days in the month
+            setLabelCount(
+                daysInMonth.toInt(),
+                true
+            ) // Set the number of labels to match the days in the month
         }
 
         lineChart.axisLeft.apply {
             setDrawGridLines(false)
             setDrawZeroLine(true) // Draw a line at the zero position
         }
-        // Refresh the chart
+
+        lineChart.axisRight.isEnabled = false // Disable the right axis
+
+// Refresh the chart
         lineChart.invalidate()
     }
-
 }
 
 private fun setupDonutChart(donutChart: PieChart, dailyIncome: Double, dailyExpenses: Double) {
